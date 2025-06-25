@@ -1,0 +1,28 @@
+# FastAPI server and related
+fastapi
+uvicorn
+
+# CORS support
+python-multipart
+
+requests
+httpx
+pydantic
+
+# Edge TTS
+edge-tts
+
+# Langchain core tools
+langchain
+langchain-community
+langchain-google-genai
+
+# Google Generative AI
+google-generativeai
+
+# YouTube transcript loader
+youtube-transcript-api
+
+# You may need this for I/O and environment setup
+tqdm
+tenacity
