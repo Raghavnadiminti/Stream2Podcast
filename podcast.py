@@ -5,7 +5,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 import edge_tts
 from v2t import getContent
 
-api_key = "AIzaSyBfJ1h5x0L7SThOSobNF_d2IQYI42lws0c"
+
 genai.configure(api_key=api_key)
 
 
