@@ -47,7 +47,7 @@
 ---
 
 ## 📁 Folder Structure
-
+<pre> ```markdown 
 Stream2Podcast/
 ├── frontend/ # React frontend
 │ ├── src/
@@ -67,4 +67,4 @@ Stream2Podcast/
 │
 ├── .gitignore
 └── README.md
-
+  ``` </pre>
