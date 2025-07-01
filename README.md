@@ -48,3 +48,23 @@
 
 ## 📁 Folder Structure
 
+Stream2Podcast/
+├── frontend/ # React frontend
+│ ├── src/
+│ │ ├── Podcast.jsx # Podcast player with Ask feature
+│ │ ├── App.jsx # Root component
+│ ├── index.html
+│ ├── App.css # Global styles
+│ ├── Podcast.css # Component-specific styles
+│ ├── package.json # Frontend dependencies
+│ └── vite.config.js # Vite configuration
+│
+├── backend/ # FastAPI backend
+│ ├── main.py # FastAPI app + API routes
+│ ├── podcast.py # AI agent logic, Gemini + TTS
+│ ├── v2t.py # YouTube transcript extraction
+│ └── requirements.txt # Python dependencies
+│
+├── .gitignore
+└── README.md
+
