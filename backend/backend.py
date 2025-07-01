@@ -1,11 +1,10 @@
-
 from fastapi import FastAPI,Request
 import uvicorn 
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from fastapi.middleware.cors import CORSMiddleware
-from podcast import getScript,audio
+from podcast import getScript,audio,qA
 import io
 
 
@@ -22,7 +21,10 @@ app.add_middleware(
 class Prompt(BaseModel):
     user_id: str
     prompt: str
-
+class Prompt2(BaseModel):
+    user_id: str
+    script: str
+    question:str
 @app.get("/")
 async def read_root():
     
@@ -46,17 +48,30 @@ connected_clients = {}
     
 @app.post('/url')
 async def givespeech(data:Prompt):
-    url=data.prompt 
-    script= await getScript(url) 
-    audio_bytes=audio(script) 
+    text=data.prompt 
+    # script= await getScript(url) 
+    audio_bytes=audio(text) 
     stream = io.BytesIO(audio_bytes)
     stream.seek(0)
     return StreamingResponse(stream, media_type="audio/mpeg")
-
     
+@app.post('/getscript')
+async def giveScript(data:Prompt):
+
+    url=data.prompt 
+
+    script=await getScript(url)
+    return {'script':script}
 
 
+@app.post('/askquestion')
+async def askQuestion(data:Prompt2):
+    question=data.question 
+    script=data.script 
 
+    res = qA(question,script) 
+
+    return {'ans':res}
 
 
 
@@ -71,4 +86,3 @@ if __name__ == "__main__":
         reload=True, 
         log_level="info"
     )
-   

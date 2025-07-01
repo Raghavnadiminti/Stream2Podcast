@@ -5,7 +5,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 import edge_tts
 from v2t import getContent
 
-
+api_key = "AIzaSyBkbo1jrW6p1TuamMvnHju4JipBoK1cGfM"
 genai.configure(api_key=api_key)
 
 
@@ -19,22 +19,23 @@ def script(transcript_text: str) -> str:
     model = genai.GenerativeModel("gemini-1.5-flash-latest")
     prompt = f"""
     ## TASK
-    You are a podcast script generator. Convert the following text into a two-person conversational podcast script.
+    You are a podcast script generator who generats large podcast. Convert the following text into a two-person conversational podcast script.
 
     ## CONTEXT
     The script must cover ALL key ideas from the original text.
-    *Original Text:*
+    Original Text:
     \"\"\"
     {transcript_text}
     \"\"\"
 
     ## STRICT OUTPUT FORMAT
-    - Generate ONLY the raw dialogue strings, one per line.
+    - Generate ONLY the raw dialogue strings, one per line .
     - NO speaker labels (e.g., "Host 1:").
     - Each dialogue line MUST be on a new line.
     - Alternate speakers, starting with Host 1.
     - Dont need to genarate less converstion try to cover all topics by how far it takes
     - Dont waste time with unwanted matter
+    - There should be a minimum of 10 dialogues for each host.
     """
     try:
         response = model.generate_content(prompt)
@@ -59,17 +60,18 @@ def answerscript(Question: str) -> str:
 
     ## CONTEXT
     A listener has asked this question during the podcast:
-    *Question:*
+    Question:
     \"\"\"
     {Question}
     \"\"\"
 
     ## STRICT OUTPUT FORMAT
-    - Generate ONLY the raw dialogue strings, one per line.
+    - Generate ONLY the raw dialogue strings, one per line ,attach \\n at ecey end of line.
     - NO speaker labels (e.g., "Host 1:").
     - Each dialogue line MUST be on a new line.
     - Alternate speakers, starting with Host 1.
-    - Maximum 6-8 lines total
+    - maximum 6-8 lines each
+    
 
     ## CONVERSATION STYLE
     - Host 1: Briefly acknowledge and start answering ("Great question! The answer is...")
@@ -121,7 +123,7 @@ def audio(script_text: str) -> str:
     
     return all_audio 
     
-    return f"Successfully created podcast audio file at: {output_file}"
+    
 
 agent = initialize_agent(
     tools=[script,answerscript],
@@ -131,7 +133,7 @@ agent = initialize_agent(
         google_api_key=api_key
     ),
     agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    verbose=True,
+    verbose=False,
 )
 
 async def getScript(url):
@@ -140,22 +142,16 @@ async def getScript(url):
     transcript_input = transcript
     
 
-    prompt = f"""
-    1. take the following text and generate a podcast script using the 'script' tool and give script as output: "{transcript_input} " 
-    """
-    response = agent.invoke({"input": prompt})
+    prompt = f"Use the script tool to get a podcast script from this transcript: {transcript_input}. Return ONLY the raw script output from the tool, nothing else."
+
+    response = script.invoke({"transcript_text": transcript_input})
     print("\n--- Initial Podcast Created ---")
-    print(response['output'])
-    return response['output']
-    # user_question = input("\nEnter your question about the podcast: ")
-    
-    # answer_prompt = f"""
-    # 1. First, use the 'answerscript' tool to generate a conversational answer script for this question: "{user_question} remember you not use 'script' tool since it dont answer specific question only create discussion"
-    # 2. Then, take the entire answer script output from the first step and use it as the input for the 'audio' tool to generate the answer audio file.
-    # """
-    # answer_response = agent.invoke({"input": answer_prompt})
-    # print("\n--- Question Answer Audio Created ---")
-    # print(answer_response['output'])
-    
-    # print("\n--- Agent Final Output ---")
-    # print("Initial podcast and question answer audio files have been generated successfully!")
+    print(response)
+    return response 
+
+def qA(user_question : str ,script : str):
+    prompt = f"Use the answerscript tool to generate an answer for this question: {user_question} based on script {script}. Return ONLY the raw answer script output from the tool,nothing else."
+    answer_response = agent.invoke({"input": prompt})
+    print("\n--- Question Answer Audio Created ---")
+    print(answer_response['output'])
+    return answer_response['output']
