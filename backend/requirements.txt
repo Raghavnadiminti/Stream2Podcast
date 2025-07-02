@@ -13,7 +13,7 @@ pydantic
 edge-tts
 
 # Langchain core tools
-langchain
+langchain== 0.3.24
 langchain-community
 langchain-google-genai
 
