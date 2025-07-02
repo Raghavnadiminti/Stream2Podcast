@@ -74,7 +74,7 @@ function Podcast() {
     setAudioSrc(null);
 
     try {
-      const { data: scriptData } = await axios.post("http://127.0.0.1:8000/getscript", {
+      const { data: scriptData } = await axios.post("https://stream2podcast.onrender.com/getscript", {
         user_id: "1",
         prompt: promptUrl,
       });
@@ -83,7 +83,7 @@ function Podcast() {
       if (!scriptText) throw new Error("Script not received");
 
       const audioResponse = await axios.post(
-        "http://127.0.0.1:8000/url",
+        "https://stream2podcast.onrender.com/url",
         { user_id: "1", prompt: scriptText },
         { responseType: 'blob' }
       );
@@ -104,7 +104,7 @@ function Podcast() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post("http://127.0.0.1:8000/askquestion", {
+      const { data } = await axios.post("https://stream2podcast.onrender.com/askquestion", {
         user_id: "1",
         question,
         script: "",
