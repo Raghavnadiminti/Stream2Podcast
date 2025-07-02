@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import './Podcast.css';
+import './podcast.css';
 
 function Podcast() {
   const [userId, setUserId] = useState('');
